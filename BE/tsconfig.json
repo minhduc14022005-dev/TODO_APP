@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    /* Môi trường chạy */
+    "target": "ES2022",               
+    "module": "CommonJS",             
+
+    /* Quản lý Thư mục */
+    "rootDir": "./src",               
+    "outDir": "./dist",               
+    "noEmit": true,                   
+
+    /* Tương thích & Bắt lỗi */
+    "esModuleInterop": true,          
+    "forceConsistentCasingInFileNames": true, 
+    "strict": true,                   
+    "skipLibCheck": true              
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
