@@ -1,4 +1,4 @@
-# 📝 Todo List Application (Intern/Fresher Assessment)
+# 📝 Todo List Application (Intern Assessment)
 
 🌍 **Live Demo:** [https://todo-app-seven-delta-57.vercel.app](https://todo-app-seven-delta-57.vercel.app)
 
