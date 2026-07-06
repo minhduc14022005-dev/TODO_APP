@@ -1,11 +1,12 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-    baseURL: 'http://localhost:8000/api', // Thay đổi URL cơ sở nếu cần
+    // Sử dụng biến môi trường khi Deploy lên Vercel, nếu chạy Local thì dùng localhost:8000
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api', 
     headers: {
         'Content-Type': 'application/json',
     },
-    timeout: 5000, // Thời gian chờ 5 giây
+    timeout: 10000, // Tăng lên 10 giây vì Server miễn phí thường mất thời gian "thức dậy"
 });
 
 export default apiClient;
