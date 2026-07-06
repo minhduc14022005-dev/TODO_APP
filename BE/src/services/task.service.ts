@@ -72,7 +72,7 @@ export class TaskService implements ITaskService {
         const updatedTask = await TaskModel.findByIdAndUpdate(
             taskId,
             updateData,
-            { new: true, runValidators: true}
+            { returnDocument: 'after', runValidators: true}
         );
         return updatedTask;
     }

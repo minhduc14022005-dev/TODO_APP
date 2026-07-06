@@ -1,16 +1,76 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { type ITask } from './types/task.type';
+import { useTasks } from './hooks/useTask';
+import TaskList from './components/TaskList';
+import TaskFormModal from './components/TaskFormModal';
+import TaskFilter from './components/TaskFilter';
+
 
 const App: React.FC = () => {
+  const { tasks, loading, searchQuery, filterStatus, setSearchQuery, setFilterStatus, saveTask, toggleStatus, deleteTask } = useTasks();
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [editingTask, setEditingTask] = useState<ITask | null>(null);
+
+  const handleOpenCreate = () => {
+    setEditingTask(null);
+    setIsOpenModal(true);
+  };
+
+  const handleOpenEdit = (task: ITask) => {
+    setEditingTask(task);
+    setIsOpenModal(true);
+  };
+
+  const handleFormSubmit = async (taskData: Partial<ITask>) => {
+    await saveTask(taskData, editingTask?._id);
+    setIsOpenModal(false);
+  };
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-xl shadow-lg border-t-4 border-blue-500 text-center">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          🚀 TODO APP 
-        </h1>
-        <p className="text-gray-600 font-medium">
-          Tailwind CSS (Bản mới nhất) đã được kích hoạt thành công!
-        </p>
+    <div className="min-h-screen bg-slate-100 py-10 px-4 font-sans relative">
+      <div className="max-w-3xl mx-auto bg-gray-50 rounded-xl shadow-xl overflow-hidden border border-gray-200">
+
+        {/* Header */}
+        <div className="bg-blue-600 p-6 text-white flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold"> QUẢN LÝ CÔNG VIỆC</h1>
+            <p className="text-blue-100 mt-1 font-medium"> Để làm việc tốt hơn, hãy tạo công việc mới! </p>
+          </div>
+          <button
+            onClick={handleOpenCreate}
+            className="bg-white text-blue-600 px-5 py-2.5 rounded-lg font-bold shadow hover:bg-blue-50 transition-colors flex items-center gap-2"
+          >
+            <span>+</span> Thêm công việc
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="p-6">
+          {/* Component Tìm kiếm & Lọc */}
+          <TaskFilter 
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              filterStatus={filterStatus}
+              onFilterChange={setFilterStatus}
+          />
+          <TaskList
+            tasks={tasks}
+            loading={loading}
+            searchQuery={searchQuery}
+            filterStatus={filterStatus}
+            onToggleStatus={toggleStatus}
+            onDelete={deleteTask}
+            onEdit={handleOpenEdit}
+          />
+        </div>
       </div>
+
+      {/* Modal Form */}
+      <TaskFormModal
+        isOpen={isOpenModal}
+        onClose={() => setIsOpenModal(false)}
+        onSubmit={handleFormSubmit}
+        taskToEdit={editingTask}
+      />
     </div>
   );
 }
