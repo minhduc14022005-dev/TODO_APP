@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { type ITask } from '../types/task.type';
+import { toast } from 'react-toastify';
 
 interface TaskFormModalProps {
     isOpen: boolean;
@@ -29,20 +30,35 @@ const TaskFormModal: React.FC<TaskFormModalProps> = ({ isOpen, onClose, onSubmit
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!title.trim()) {
-            alert('Vui lòng nhập tên công việc!');
+            toast.warning('Vui lòng nhập tên công việc!');
             return;
         }
+
+        if (title.trim().length < 3) {
+            toast.warning('Tên công việc quá ngắn, vui lòng nhập ít nhất 3 ký tự!');
+            return;
+        }
+
+        if (title.trim().length > 100) {
+            toast.warning('Tiêu đề quá dài, không được vượt quá 100 ký tự!');
+            return;
+        }
+
+
 
         try {
             setIsSubmitting(true);
             await onSubmit({ title, description });
+
+            toast.success(taskToEdit ? 'Cập nhật thành công!' : 'Tạo mới thành công!');
             
             // Thành công thì xóa trắng form và đóng Modal
             setTitle('');
             setDescription('');
             onClose();
-        } catch (error) {
-            alert('Có lỗi xảy ra khi lưu dữ liệu!');
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || 'Có lỗi xảy ra khi lưu dữ liệu!';
+            toast.error(errorMessage);
         } finally {
             setIsSubmitting(false);
         }

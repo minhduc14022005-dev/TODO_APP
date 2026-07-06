@@ -31,15 +31,7 @@ const TaskList: React.FC<TaskListProps> = ({
         );
     }
 
-    // Kỹ thuật Early Return cho trạng thái Rỗng (Empty State)
-    if (tasks.length === 0) {
-        return (
-            <div className="text-center py-12 text-gray-500 bg-white rounded-lg border border-dashed border-gray-300">
-                Chưa có công việc nào. Bấm "Thêm công việc" để bắt đầu!
-            </div>
-        );
-    }
-
+    // Kỹ thuật Early Return cho trạng thái Rỗng (Empty State) và Loading
     if(!loading && tasks.length === 0){
         const isSearchingOrFiltering = (searchQuery && searchQuery.trim() !== '') || filterStatus !== undefined;
         if (isSearchingOrFiltering) {

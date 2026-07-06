@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { taskService } from '../services/task.service';
 import { type ITask } from '../types/task.type';
+import { toast } from 'react-toastify';
 
 export const useTasks = () => {
     const [tasks, setTasks] = useState<ITask[]>([]);
@@ -8,27 +9,44 @@ export const useTasks = () => {
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [filterStatus, setFilterStatus] = useState<boolean | undefined>(undefined);
 
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(1);
+    const [debouncedSearch, setDebouncedSearch] = useState<string>('');
+
+    // Tạo debounce để làm việc tối ưu bộ nhớ
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(searchQuery);
+        }, 500); 
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
+
     // Dùng useCallback để tối ưu bộ nhớ, tránh tạo lại hàm sau mỗi lần render
     const fetchTasks = useCallback(async () => {
         try {
             setLoading(true);
-            const response = await taskService.getAllTasks(1,50, filterStatus, searchQuery);
+            const response = await taskService.getAllTasks(currentPage, 5, filterStatus, searchQuery);
             if (response.success) {
                 setTasks(response.data);
+                // Nếu có pagination thì lấy ra số trang
+                if (response.pagination) {
+                    setTotalPages(response.pagination.totalPages);
+                }
             }
         } catch (err) {
             console.error('Lỗi khi tải danh sách:', err);
         } finally {
             setLoading(false);
         }
-    }, [filterStatus, searchQuery]);
+    }, [filterStatus, searchQuery, currentPage]);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [debouncedSearch, filterStatus]);
 
     // Tự động gọi API khi khởi tạo
     useEffect(() => {
-        const delayTimer = setTimeout(() => {
-            fetchTasks();
-        }, 500);
-        return () => clearTimeout(delayTimer);
+        fetchTasks();
     }, [fetchTasks]);
 
     // Hàm Tạo mới hoặc Cập nhật
@@ -48,18 +66,19 @@ export const useTasks = () => {
             await taskService.updateTask(id, { isCompleted: !currentStatus });
         } catch (err) {
             fetchTasks(); // Rollback nếu lỗi
+            toast.error('Lỗi mạng: Không thể cập nhật trạng thái!');
         }
     };
 
     // Hàm Xóa
     const deleteTask = async (id: string) => {
-        if (!window.confirm('Em có chắc chắn muốn xóa công việc này?')) return false;
         try {
             await taskService.deleteTask(id);
             setTasks(prev => prev.filter(t => t._id !== id));
+            toast.success('Xóa công việc thành công!');
             return true; 
         } catch (err) {
-            alert('Lỗi khi xóa hệ thống!');
+            toast.error('Có lỗi xảy ra khi xóa công việc!');
             return false;
         }
     };
@@ -72,6 +91,9 @@ export const useTasks = () => {
         setFilterStatus,
         saveTask,
         toggleStatus,
-        deleteTask
+        deleteTask,
+        currentPage,
+        totalPages,
+        setCurrentPage
     };
 };

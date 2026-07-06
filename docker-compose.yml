@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  # 1. Cài đặt CSDL MongoDB
+  database:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db # Lưu lại data tránh bị mất khi tắt máy
+
+  # 2. Cài đặt Backend
+  backend:
+    build: ./BE
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      # TRỌNG TÂM LÀ ĐÂY: Sửa IP thành tên của cái database ở trên
+      - MONGO_URI=mongodb://database:27017/todo_db 
+    depends_on:
+      - database
+
+  # 3. Cài đặt Frontend
+  frontend:
+    build: ./FE
+    ports:
+      - "3000:80" # Ánh xạ cổng 3000 của máy tính em vào cổng 80 của NGINX
+    depends_on:
+      - backend
+
+volumes:
+  mongodb_data:
