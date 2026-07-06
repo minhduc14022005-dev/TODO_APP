@@ -16,5 +16,8 @@ COPY . .
 # Khai báo cổng mà Backend sẽ chạy
 EXPOSE 5000
 
+# Build code TypeScript ra JavaScript
+RUN npm run build
+
 # Lệnh khởi động server
 CMD ["npm", "start"]

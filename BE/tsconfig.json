@@ -7,7 +7,7 @@
     /* Quản lý Thư mục */
     "rootDir": "./src",               
     "outDir": "./dist",               
-    "noEmit": true,                   
+    "noEmit": false,                   
 
     /* Tương thích & Bắt lỗi */
     "esModuleInterop": true,          
