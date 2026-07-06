@@ -1,5 +1,7 @@
 # 📝 Todo List Application (Intern/Fresher Assessment)
 
+🌍 **Live Demo:** [https://todo-app-seven-delta-57.vercel.app](https://todo-app-seven-delta-57.vercel.app)
+
 Một ứng dụng quản lý công việc (Todo List) Fullstack được phát triển với kiến trúc hệ thống chuẩn mực, áp dụng các kỹ thuật tối ưu hóa trải nghiệm người dùng (UX) và hiệu năng (Performance) thực tế của doanh nghiệp.
 
 ## 🚀 Tính năng & Kỹ thuật nổi bật
