@@ -64,5 +64,5 @@ npm run test
 ```
 
 ## 👨‍💻 Tác giả
-- Phát triển bởi: **[Tên Của Bạn]**
-- Vị trí ứng tuyển: Thực tập sinh / Fresher Fullstack Developer
+- Phát triển bởi: Võ Huỳnh Minh Đức
+- Vị trí ứng tuyển: Intern Developer
